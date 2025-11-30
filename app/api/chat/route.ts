@@ -54,9 +54,6 @@ Your response must strictly follow this format:
   ]
 }`;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 function getMemory(sessionId: string) {
   if (!sessions.has(sessionId)) {
@@ -81,11 +78,15 @@ export async function POST(req: Request) {
     const memory = getMemory(sessionId);
 
     // Build messages for OpenAI
-    const messages = [
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: 'system', content: SYSTEM_MESSAGE },
-      ...memory.slice(-8), // Last 8 messages for context
+      ...memory.slice(-8).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })),
       { role: 'user', content: chatInput }
     ];
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Use appropriate model
