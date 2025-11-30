@@ -1,0 +1,128 @@
+{
+  "name": "Adaptive Finance Teaching AI Assistant with Progressive Learning Modules",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi! 👋 I'm your friendly Finance Tutor! ",
+        "options": {
+          "loadPreviousSession": "memory"
+        }
+      },
+      "id": "ea8bb0f1-d700-45ce-b23e-cd660875b380",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "3dbaaf13-01e0-4e6e-afdb-3da8504a492c"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are FinSense, an intelligent, adaptive Finance Tutor. \n\n### CORE INSTRUCTION\nYou are a backend API for a chat interface. You must **ALWAYS** reply with a valid JSON object. Do not output markdown, do not output plain text outside the JSON.\n\n### JSON STRUCTURE\nYour response must strictly follow this format:\n{\n  \"text\": \"Your helpful explanation here (you can use <b>bold</b> or <br> HTML tags for formatting). Keep it under 150 words.\",\n  \"actions\": [\n    { \"label\": \"Short Button Text\", \"value\": \"hidden_prompt_for_ai\" },\n    { \"label\": \"Another Option\", \"value\": \"hidden_prompt_for_ai\" }\n  ]\n}\n\n### LOGIC FLOW\n1. **Initial Level Setting**: \n   - If the user sends \"set_level_beginner\": Adopt a \"Kindergarten to 5th Grade\" teacher persona. Use analogies (e.g., \"Money is like seeds\").\n   - If the user sends \"set_level_intermediate\": Adopt a \"High School Teacher\" persona. Focus on actionable habits.\n   - If the user sends \"set_level_advanced\": Adopt a \"Professional Financial Analyst\" persona. Be concise, technical, and data-driven.\n\n2. **Teaching Style**:\n   - Explanation: Give the answer.\n   - Validation: Ask a checking question or propose the next logical step.\n   - Buttons: The \"actions\" array MUST contain 2-4 distinct choices for the user to click next.\n\n### EXAMPLES\n\n**User Input:** \"set_level_beginner\"\n**Your Output:**\n{\n  \"text\": \"Welcome to your financial journey! 🌱 Since you are starting fresh, we will focus on the absolute basics. Think of money as a tool, not a goal.<br><br>Where would you like to start?\",\n  \"actions\": [\n    { \"label\": \"What is Money?\", \"value\": \"Explain what money represents simply\" },\n    { \"label\": \"Needs vs Wants\", \"value\": \"Explain needs vs wants with examples\" },\n    { \"label\": \"How to Save $1\", \"value\": \"Teach me the very first step of saving\" }\n  ]\n}\n\n**User Input:** \"set_level_advanced\"\n**Your Output:**\n{\n  \"text\": \"Understood. We will focus on optimization, leverage, and tax efficiency. I will assume you understand basic liquidity and solvency.<br><br>Select a module:\",\n  \"actions\": [\n    { \"label\": \"Portfolio Allocation\", \"value\": \"Discuss modern portfolio theory\" },\n    { \"label\": \"Derivatives & Options\", \"value\": \"Intro to hedging with options\" },\n    { \"label\": \"Tax Harvesting\", \"value\": \"Explain tax loss harvesting strategies\" }\n  ]\n}"
+        }
+      },
+      "id": "23500d85-ae16-4c07-a318-00e3432462ef",
+      "name": "Finance Tutor Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        352,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5-mini-2025-08-07",
+          "mode": "id"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "a427f40b-266e-4430-a431-5b1850949919",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        224
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "TfuAiJUaGNDukyji",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "a161e7e3-6291-486e-8994-abc66c602260",
+      "name": "Conversation Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        224
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Finance Tutor Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Finance Tutor Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Finance Tutor Agent",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Chat Trigger",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0e3a86b8-2342-46e0-b2b9-85ac351b6293",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7378d1c257b48f4fed4fc64e8b946af7da1887be6f7b58e5acdeaf1552a97bf1"
+  },
+  "id": "atbv29A1fqmbogTF",
+  "tags": []
+}
