@@ -91,7 +91,7 @@ export async function POST(req: Request) {
     const completion = await openai.chat.completions.create({
       model: 'gpt-5-mini-2025-08-07', // Use appropriate model
       messages,
-      temperature: 0.7,
+      temperature: 1,
     });
 
     const assistantMsg = completion.choices[0]?.message?.content || '';
