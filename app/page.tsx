@@ -71,14 +71,10 @@ export default function Chat() {
 
       const data = await response.json();
 
-      // Clean up the response text to handle <br> tags if they exist, replacing them with newlines for markdown
-      let cleanContent = data.text || 'Sorry, I could not process that.';
-      cleanContent = cleanContent.replace(/<br\s*\/?>/gi, '\n');
-
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: cleanContent,
+        content: data.text || 'Sorry, I could not process that.',
         actions: data.actions || [],
       };
 
