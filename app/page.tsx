@@ -141,12 +141,29 @@ export default function Chat() {
             >
               <div
                 className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-5 py-4 shadow-sm ${message.role === 'user'
-                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-br-none shadow-blue-900/20'
-                    : 'bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 text-slate-200 rounded-bl-none shadow-black/10'
+                  ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-br-none shadow-blue-900/20'
+                  : 'bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 text-slate-200 rounded-bl-none shadow-black/10'
                   }`}
               >
                 <div className={`text-[15px] leading-relaxed prose prose-invert max-w-none ${message.role === 'user' ? 'prose-p:text-white prose-a:text-white' : 'prose-p:text-slate-200 prose-a:text-blue-400'}`}>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      p: ({ node, ...props }) => <p className="whitespace-pre-wrap" {...props} />,
+                      strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                      em: ({ node, ...props }) => <em className="italic" {...props} />,
+                      code: ({ node, inline, ...props }) =>
+                        inline ? <code className="bg-slate-700/50 px-1.5 py-0.5 rounded text-sm" {...props} /> : <code {...props} />,
+                      ul: ({ node, ...props }) => <ul className="list-disc pl-5 my-2" {...props} />,
+                      ol: ({ node, ...props }) => <ol className="list-decimal pl-5 my-2" {...props} />,
+                      li: ({ node, ...props }) => <li className="my-1" {...props} />,
+                      a: ({ node, ...props }) => <a className="underline hover:opacity-80 transition-opacity" {...props} />,
+                      h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-4 mb-2" {...props} />,
+                      h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-3 mb-2" {...props} />,
+                      h3: ({ node, ...props }) => <h3 className="text-lg font-bold mt-3 mb-2" {...props} />,
+                      blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-slate-600 pl-4 italic my-2" {...props} />,
+                    }}
+                  >
                     {message.content}
                   </ReactMarkdown>
                 </div>
