@@ -152,8 +152,10 @@ export default function Chat() {
                       p: ({ node, ...props }) => <p className="whitespace-pre-wrap" {...props} />,
                       strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
                       em: ({ node, ...props }) => <em className="italic" {...props} />,
-                      code: ({ node, inline, ...props }) =>
-                        inline ? <code className="bg-slate-700/50 px-1.5 py-0.5 rounded text-sm" {...props} /> : <code {...props} />,
+                      code: ({ node, ...props }: any) => {
+                        const isInline = !props.className;
+                        return isInline ? <code className="bg-slate-700/50 px-1.5 py-0.5 rounded text-sm" {...props} /> : <code {...props} />;
+                      },
                       ul: ({ node, ...props }) => <ul className="list-disc pl-5 my-2" {...props} />,
                       ol: ({ node, ...props }) => <ol className="list-decimal pl-5 my-2" {...props} />,
                       li: ({ node, ...props }) => <li className="my-1" {...props} />,
